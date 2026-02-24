@@ -3,106 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meesam Fragrance | M.F</title>
+    <title>Meesam Fragrance | Premium Collection</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* CSS Variables for Dark/Light Mode Theme */
         :root { 
-            --primary-dark: #121212; 
-            --gold-accent: #d4af37; 
-            --bg-light: #f9f9f9;
-            --text-gray: #555;
+            --bg-color: #f4f4f6;
+            --text-main: #222;
+            --text-muted: #666;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --gold-accent: #d4af37;
+            --gold-hover: #b5952f;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        * { box-sizing: border-box; }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-main: #f8f8f8;
+            --text-muted: #aaaaaa;
+            --card-bg: #1e1e1e;
+            --header-bg: rgba(18, 18, 18, 0.85);
+            --shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; padding: 0; 
-            background-color: var(--bg-light); 
-            color: #333; 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            transition: var(--transition);
+            overflow-x: hidden;
         }
+        
+        /* Glassmorphism Sticky Header */
         header { 
-            background: var(--primary-dark); 
-            color: white; 
-            padding: 2rem 1rem; 
-            text-align: center; 
-            border-bottom: 4px solid var(--gold-accent);
+            background: var(--header-bg); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1rem 5%; 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
-        header h1 { margin: 0; font-size: 2.5rem; letter-spacing: 2px; color: var(--gold-accent); }
-        header p { margin: 5px 0 0; font-size: 1rem; letter-spacing: 3px; font-weight: 300; text-transform: uppercase;}
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        .logo {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 { font-size: 2rem; letter-spacing: 3px; color: var(--gold-accent); }
+        .logo span { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--text-muted); }
+        
+        .theme-toggle {
+            background: none; border: 1px solid var(--gold-accent); color: var(--gold-accent);
+            padding: 8px 15px; border-radius: 20px; cursor: pointer;
+            font-size: 0.9rem; transition: var(--transition);
+        }
+        .theme-toggle:hover { background: var(--gold-accent); color: #121212; }
+
+        .container { max-width: 1250px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* Hero Section */
         .hero { 
-            text-align: center; padding: 30px 15px; 
-            background: white; margin-bottom: 30px; 
-            border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            text-align: center; padding: 60px 20px; 
+            margin-bottom: 50px;
         }
+        .hero h2 { font-size: 2.8rem; margin-bottom: 15px; font-weight: 300; }
+        .hero h2 strong { font-weight: 700; color: var(--gold-accent); }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; line-height: 1.6;}
+        
+        /* Product Grid */
         .product-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
-            gap: 25px; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
         }
+        
+        /* Advanced Card UI */
         .product-card { 
-            background: white; border-radius: 12px; padding: 20px; 
-            text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
-            transition: transform 0.3s ease; 
+            background: var(--card-bg); border-radius: 16px; padding: 25px; 
+            text-align: center; box-shadow: var(--shadow); 
+            transition: var(--transition); 
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            /* Initial state for animation */
+            opacity: 0; transform: translateY(30px);
         }
+        
+        /* Reveal Class for JS Animation */
+        .product-card.reveal { opacity: 1; transform: translateY(0); }
+
+        .product-card:hover { 
+            transform: translateY(-10px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            border-color: var(--gold-accent);
+        }
+        
+        .image-wrapper {
+            position: relative;
+            width: 100%; height: 260px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #fff; /* Keep image bg white to match perfume renders */
+        }
+
         .product-card img { 
-            width: 100%; height: 250px; 
+            width: 100%; height: 100%; 
             object-fit: contain; 
-            border-radius: 8px; margin-bottom: 15px;
+            transition: transform 0.5s ease;
         }
+
+        .product-card:hover img { transform: scale(1.08); }
+        
+        .title { font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main);}
+        .desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 25px; min-height: 45px; line-height: 1.5;}
+        
+        /* Modern Button */
         .order-btn { 
-            background: var(--primary-dark); color: var(--gold-accent); 
-            text-decoration: none; padding: 12px 20px; 
-            border-radius: 8px; display: inline-block; 
-            font-weight: bold; width: 100%;
+            background: transparent; color: var(--gold-accent); 
+            text-decoration: none; padding: 14px 24px; 
+            border-radius: 30px; display: inline-block; 
+            font-weight: 600; width: 100%;
+            transition: var(--transition);
+            border: 2px solid var(--gold-accent);
+            text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;
         }
+        .order-btn:hover { 
+            background: var(--gold-accent); 
+            color: #121212; 
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #111; color: #fff;
+            text-align: center; padding: 40px 20px;
+            margin-top: 60px;
+        }
+        footer p { color: #888; font-size: 0.9rem; margin-top: 10px;}
+        
+        /* WhatsApp Floating Button */
         .whatsapp-float { 
-            position: fixed; bottom: 20px; right: 20px; 
+            position: fixed; bottom: 30px; right: 30px; 
             background-color: #25d366; color: white; 
-            border-radius: 50px; padding: 12px 20px; 
-            text-decoration: none; font-weight: bold;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); 
+            z-index: 1000; transition: var(--transition);
+            text-decoration: none;
+        }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(5deg); background-color: #20b858;}
+        
+        @media (max-width: 768px) {
+            .hero h2 { font-size: 2.2rem; }
+            header { padding: 15px 5%; }
+            .whatsapp-float { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.5rem;}
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>M.F</h1>
-    <p>Meesam Fragrance</p>
+    <a href="#" class="logo">
+        <h1>M.F</h1>
+        <span>Meesam Fragrance</span>
+    </a>
+    <button class="theme-toggle" id="theme-btn"><i class="fas fa-moon"></i> Dark Mode</button>
 </header>
 
 <div class="container">
     <section class="hero">
-        <h2>Premium Fragrance Collection</h2>
-        <p>Exclusive range of luxury perfumes. Click to order via WhatsApp.</p>
+        <h2>Experience <strong>True Luxury</strong></h2>
+        <p>Discover our meticulously crafted collection of premium perfumes and authentic attars. Signature scents that define your presence.</p>
     </section>
 
     <section class="product-grid">
+        
         <div class="product-card">
-            <img src="Gemini_Generated_Image_nou2jdnou2jdnou2.png" alt="Oud Al Layl">
-            <div style="font-weight:bold;">Oud Al Layl</div>
-            <a href="https://wa.me/923472828977?text=Order: Oud Al Layl" class="order-btn">Order via WhatsApp</a>
+            <div class="image-wrapper">
+                <img src="Gemini_Generated_Image_nou2jdnou2jdnou2.png" alt="Oud Al Layl">
+            </div>
+            <div class="title">Oud Al Layl</div>
+            <div class="desc">A premium, long-lasting Oud essence enclosed in an elegant clear bottle.</div>
+            <a href="https://wa.me/923472828977?text=Hi, I would like to order 'Oud Al Layl'." class="order-btn" target="_blank">Order Now</a>
         </div>
 
         <div class="product-card">
-            <img src="Gemini_Generated_Image_9zgacu9zgacu9zga.png" alt="Denhill Desire Purple">
-            <div style="font-weight:bold;">Denhill Desire (Purple)</div>
-            <a href="https://wa.me/923472828977?text=Order: Denhill Desire Purple" class="order-btn">Order via WhatsApp</a>
+            <div class="image-wrapper">
+                <img src="Gemini_Generated_Image_9zgacu9zgacu9zga.png" alt="Denhill Desire Purple">
+            </div>
+            <div class="title">Denhill Desire <span style="font-size: 0.8em; color:var(--text-muted);">(Purple)</span></div>
+            <div class="desc">A bold and captivating scent perfect for making a strong impression.</div>
+            <a href="https://wa.me/923472828977?text=Hi, I would like to order 'Denhill Desire (Purple Edition)'." class="order-btn" target="_blank">Order Now</a>
         </div>
 
         <div class="product-card">
-            <img src="Gemini_Generated_Image_wfv5lkwfv5lkwfv5.png" alt="Denhill Desire Classic">
-            <div style="font-weight:bold;">Denhill Desire (Classic)</div>
-            <a href="https://wa.me/923472828977?text=Order: Denhill Desire Classic" class="order-btn">Order via WhatsApp</a>
+            <div class="image-wrapper">
+                <img src="Gemini_Generated_Image_wfv5lkwfv5lkwfv5.png" alt="Denhill Desire Classic">
+            </div>
+            <div class="title">Denhill Desire <span style="font-size: 0.8em; color:var(--text-muted);">(Classic)</span></div>
+            <div class="desc">The classic signature fragrance with a refreshing and modern appeal.</div>
+            <a href="https://wa.me/923472828977?text=Hi, I would like to order 'Denhill Desire (Classic)'." class="order-btn" target="_blank">Order Now</a>
         </div>
 
         <div class="product-card">
-            <img src="Gemini_Generated_Image_i6edcqi6edcqi6ed.png" alt="Royal Golden Attar">
-            <div style="font-weight:bold;">Royal Golden Attar</div>
-            <a href="https://wa.me/923472828977?text=Order: Royal Golden Attar" class="order-btn">Order via WhatsApp</a>
+            <div class="image-wrapper">
+                <img src="Gemini_Generated_Image_i6edcqi6edcqi6ed.png" alt="Royal Golden Attar">
+            </div>
+            <div class="title">Royal Golden Attar</div>
+            <div class="desc">Traditional, pure, alcohol-free essence presented in a luxurious golden vial.</div>
+            <a href="https://wa.me/923472828977?text=Hi, I would like to order the 'Royal Golden Attar'." class="order-btn" target="_blank">Order Now</a>
         </div>
+
     </section>
 </div>
 
-<a href="https://wa.me/923472828977" class="whatsapp-float">💬 Chat / Inquiries</a>
+<footer>
+    <h2>M.F</h2>
+    <p>&copy; 2026 Meesam Fragrance. All Rights Reserved.</p>
+</footer>
+
+<a href="https://wa.me/923472828977" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+    // Theme Toggle Logic
+    const themeBtn = document.getElementById('theme-btn');
+    const body = document.body;
+
+    // Check saved theme
+    const savedTheme = localStorage.getItem('mf_theme');
+    if (savedTheme === 'dark') {
+        body.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            localStorage.setItem('mf_theme', 'light');
+            themeBtn.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('mf_theme', 'dark');
+            themeBtn.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        }
+    });
+
+    // Scroll Animation Logic (Intersection Observer)
+    const cards = document.querySelectorAll('.product-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Add a slight delay based on index for cascade effect
+                setTimeout(() => {
+                    entry.target.classList.add('reveal');
+                }, index * 150);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    cards.forEach(card => {
+        observer.observe(card);
+    });
+</script>
 
 </body>
 </html>
